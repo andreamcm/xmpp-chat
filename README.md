@@ -18,3 +18,12 @@ Once pip is installed, you have to add the following libraries:
 Once intalled, you can run the program by going to the path the file is inside the command prompt and write: `<python chatUser.py>`.
 
 ### Linux
+The same rules apply to the Linux configuration as they did for the Windows one. First, you have to check if python is installed or not. Open a terminal and type `<python>` into it. If no output comes out, go to the python website (https://www.python.org/downloads/) and download the 3.6.5 version. 
+
+Next, you have to install some libraries using pip. If you try using pip and it doesn't seem to be installed, you have to install it. To do so, you can write `<apt install python3-pip>`on the terminal to get it installed. You can check its installation by using the `<pip -v>` command on the terminal.
+
+Once pip is installed, you have to add the following libraries:
+`<pip install Sleekxmpp>`
+`<pip install dnspython>`
+
+Once intalled, you can run the program by going to the path the file is inside the command prompt and write: `<python chatUser.py>`.
