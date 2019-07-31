@@ -2,9 +2,11 @@
 # Autora: Andrea Cordón
 # Carné: 16076
 # chatUser.py
+# This program is based on the following tutorial: https://sleekxmpp.readthedocs.io/en/latest/
 
 # Importing all the libraries used in this program
 import sleekxmpp
+from sleekxmpp import ClientXMPP
 import sys
 import logging
 import getpass
@@ -104,10 +106,11 @@ if __name__ == '__main__':
 
     
     # Call to all Register pluglins
-    xmpp.register_plugin('xep_0030') # Service Discovery
-    xmpp.register_plugin('xep_0004') # Data forms
-    xmpp.register_plugin('xep_0066') # Out-of-band Data
-    xmpp.register_plugin('xep_0077') # In-band Registration
+    xmpp.register_plugin('xep_0030') # Service discovery
+    xmpp.register_plugin('xep_0004')
+    xmpp.register_plugin('xep_0066')
+    xmpp.register_plugin('xep_0077')
+    xmpp.register_plugin('xep_0199') # XMPP ping
     xmpp['xep_0077'].force_registration = False
 
   
@@ -141,30 +144,28 @@ if __name__ == '__main__':
             
             # Send a group message    
             elif(loggedIn_option == "4"):
-                print("Contacts:")
-                print(xmpp.client_roster+'\n')
+                print("Option not implemented in this version")
 
             # Show other user information   
             elif(loggedIn_option == "5"):
-                print("Contacts:")
-                print(xmpp.client_roster+'\n')
+                print("Option not implemented in this version")
 
             # Set personal message    
             elif(loggedIn_option == "6"):
-                print("Contacts:")
-                print(xmpp.client_roster+'\n')
+                print("Option not implemented in this version")
 
             # Log Off    
-            elif(loggedIn_option == "7"):   
+            elif(loggedIn_option == "7"):
+                break   
                 print("")
 
             # Delete my account
             elif(loggedIn_option == "8"):   
-                print("")
+                print("Option not implemented in this version")
 
             # Go back
             elif(loggedIn_option == "Back"):   
-                print("")
+                print("Option not implemented in this version")
     
     # In case connection fails       
     else:
