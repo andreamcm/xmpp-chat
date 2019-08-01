@@ -30,5 +30,6 @@ Once intalled, you can run the program by going to the path the file is inside t
 
 ### How to use it
 Once you ran the last command on your command prompt/terminal, you have to select one of two options: 1. Log in or 2. Register. Select the one you desire, but remember to always add the server to your username. Example:
+
 Username: andrea@alumchat.xyz
 Password: <password>
