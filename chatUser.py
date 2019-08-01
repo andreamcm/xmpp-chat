@@ -11,6 +11,7 @@ import sys
 import logging
 import getpass
 from sleekxmpp.exceptions import IqError, IqTimeout
+from sleekxmpp.stanza import Message, Presence, Iq
 from optparse import OptionParser
 from menus import *
    
@@ -30,8 +31,11 @@ class MyChatBot(sleekxmpp.ClientXMPP):
         else:
             print("Please enter 1 or 2")
     
-        # For the users personalized message
+        # For the users messages
         self.add_event_handler("message", self.message)
+
+        # For the register management
+        self.register_plugin("xep_0047", {"auto_accept": True})
 
     # Start function to start the session
     def sessionStart(self, event):
@@ -43,12 +47,14 @@ class MyChatBot(sleekxmpp.ClientXMPP):
     # Message management function 
     def message(self, messag):
         if messag['type'] in ('chat', 'normal'):
-            messag.reply("Se envio\n%(body)s" % messag).send()
-            print(messag)
+            #messag.reply("Se envio\n%(body)s" % messag).send()
+            print("From: ", messag["from"])
+            print("Subject: ", messag["subject"])
+            print("Message: ", messag["body"])
 
     # Register management function using sleek exceptions
     def register(self, iq):
-        serverResponse = Iq.reg()
+        serverResponse = self.Iq()
         serverResponse["type"] = "set"
         serverResponse["register"]["username"] = self.boundjid.user
         serverResponse["register"]["password"] = self.password
@@ -58,11 +64,31 @@ class MyChatBot(sleekxmpp.ClientXMPP):
             logging.info("Account created!: %s!" % self.boundjid)
         except IqError as e:
             logging.error("It was imposible to create the account: %s" %
-                    e.reg["error"]["text"])
+                    e.iq["error"]["text"])
             self.disconnect()
         except IqTimeout:
             logging.error("Server response took longer than wanted, try again.")
             self.disconnect()
+
+    # Delete account management function using sleek exceptions
+    def deleteAccount(self):
+        serverResponse = self.Iq()
+        serverResponse["type"] = "set"
+        serverResponse["from"] = self.boundjid.user
+        serverResponse["register"] = ""
+        serverResponse["register"]["remove"] = ""
+        print(serverResponse)
+        try:
+            serverResponse.send(now=True)
+            logging.info("Account deleted %s!" % self.boundjid)
+        except IqError as e:
+            logging.error("It was imposible to delete the account: %s" %
+                    e.iq["error"]["text"])
+            self.disconnect()
+        except IqTimeout:
+            logging.error("Server response took longer than wanted, try again.")
+            self.disconnect()
+
     
 # Main program
 if __name__ == '__main__':
@@ -125,9 +151,9 @@ if __name__ == '__main__':
 
             # To get all the users joined to the chat
             if(loggedIn_option == "1"):
-                print("\nContacts:")
-                print(xmpp.client_roster)
-                print("")
+                print("\nContacts:\n")
+                contacts = xmpp.client_roster
+                print(contacts.keys())
 
             # Send a message to a specific user 
             elif(loggedIn_option == "2"):
@@ -152,16 +178,21 @@ if __name__ == '__main__':
 
             # Set personal message    
             elif(loggedIn_option == "6"):
-                print("Option not implemented in this version")
+                personal = input("What is your personal message?: ")
+                status = input("What is your new Status?: ")
+                xmpp.makePresence(pfrom=xmpp.jid, pstatus=status, pshow=personal)
 
             # Log Off    
             elif(loggedIn_option == "7"):
+                print("Logged Off")
+                xmpp.disconnect()
                 break   
-                print("")
 
             # Delete my account
             elif(loggedIn_option == "8"):   
-                print("Option not implemented in this version")
+                print("Account deleted")
+                xmpp.deleteAccount()
+                xmpp.disconnect()
 
             # Go back
             elif(loggedIn_option == "Back"):   
